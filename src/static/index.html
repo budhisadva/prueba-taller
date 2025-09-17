@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller 1: Técnicas de Prompting</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+        .nav-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        .principle-card {
+            border-left: 4px solid;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        .principle-1 { border-left-color: #3b82f6; }
+        .principle-2 { border-left-color: #10b981; }
+        .principle-3 { border-left-color: #8b5cf6; }
+        .principle-4 { border-left-color: #f59e0b; }
+        .limitation-card {
+            border: 1px solid;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+        .limitation-1 { border-color: #ef4444; background-color: #fef2f2; }
+        .limitation-2 { border-color: #f97316; background-color: #fff7ed; }
+        .limitation-3 { border-color: #eab308; background-color: #fefce8; }
+        .limitation-4 { border-color: #8b5cf6; background-color: #f3e8ff; }
+        .limitation-5 { border-color: #6b7280; background-color: #f9fafb; }
+        .limitation-6 { border-color: #10b981; background-color: #f0fdf4; }
+        .limitation-7 { border-color: #3b82f6; background-color: #eff6ff; }
+        .limitation-8 { border-color: #6366f1; background-color: #eef2ff; }
+        .exercise-card {
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+        .exercise-1 { border-color: #3b82f6; background-color: #eff6ff; }
+        .exercise-2 { border-color: #10b981; background-color: #f0fdf4; }
+        .exercise-3 { border-color: #8b5cf6; background-color: #f3e8ff; }
+        .exercise-4 { border-color: #f59e0b; background-color: #fffbeb; }
+        .visual-idea {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+            border: 1px solid #c7d2fe;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-8 sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold mb-2">Taller 1: Técnicas de Prompting</h1>
+                <p class="text-xl opacity-90">Capacidades y limitaciones de la IA</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-4 gap-8">
+            <!-- Sidebar Navigation -->
+            <div class="lg:col-span-1">
+                <div class="card p-6 sticky top-28">
+                    <h3 class="text-lg font-bold mb-4 text-gray-800">Contenido del Taller</h3>
+                    <nav class="space-y-2">
+                        <button class="nav-button w-full text-left p-3 rounded-lg transition-all duration-300 hover:bg-gray-100 active" onclick="showSection('llm')">
+                            <div class="flex items-center">
+                                <i class="fas fa-brain w-5 h-5 mr-3"></i>
+                                <div>
+                                    <div class="font-medium text-sm">¿Qué es un modelo de lenguaje (LLM)?</div>
+                                    <div class="text-xs text-gray-500 mt-1">Comprende los fundamentos de los modelos de lenguaje grandes</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="nav-button w-full text-left p-3 rounded-lg transition-all duration-300 hover:bg-gray-100" onclick="showSection('fundamentals')">
+                            <div class="flex items-center">
+                                <i class="fas fa-comments w-5 h-5 mr-3"></i>
+                                <div>
+                                    <div class="font-medium text-sm">Fundamentos de prompting</div>
+                                    <div class="text-xs text-gray-500 mt-1">Aprende los principios básicos para crear prompts efectivos</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="nav-button w-full text-left p-3 rounded-lg transition-all duration-300 hover:bg-gray-100" onclick="showSection('advanced')">
+                            <div class="flex items-center">
+                                <i class="fas fa-cogs w-5 h-5 mr-3"></i>
+                                <div>
+                                    <div class="font-medium text-sm">Técnicas avanzadas</div>
+                                    <div class="text-xs text-gray-500 mt-1">Domina técnicas sofisticadas como Chain-of-Thought y Few-Shot</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="nav-button w-full text-left p-3 rounded-lg transition-all duration-300 hover:bg-gray-100" onclick="showSection('limitations')">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle w-5 h-5 mr-3"></i>
+                                <div>
+                                    <div class="font-medium text-sm">Limitaciones de la IA</div>
+                                    <div class="text-xs text-gray-500 mt-1">Reconoce las restricciones y desafíos de la inteligencia artificial</div>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button class="nav-button w-full text-left p-3 rounded-lg transition-all duration-300 hover:bg-gray-100" onclick="showSection('practice')">
+                            <div class="flex items-center">
+                                <i class="fas fa-target w-5 h-5 mr-3"></i>
+                                <div>
+                                    <div class="font-medium text-sm">Práctica</div>
+                                    <div class="text-xs text-gray-500 mt-1">Aplica lo aprendido con ejercicios prácticos e interactivos</div>
+                                </div>
+                            </div>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <div class="card min-h-screen">
+                    <!-- LLM Section -->
+                    <div id="llm" class="section-content active p-8">
+                        <div class="flex items-center mb-6">
+                            <i class="fas fa-brain text-3xl mr-4 text-blue-600"></i>
+                            <h2 class="text-3xl font-bold text-gray-800">¿Qué es un modelo de lenguaje (LLM)?</h2>
+                        </div>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            Un Modelo de Lenguaje Grande (LLM, por sus siglas en inglés, Large Language Model) es un tipo de inteligencia artificial entrenado con inmensas cantidades de datos textuales. Estos modelos son capaces de comprender, generar y procesar lenguaje humano de manera coherente y contextualmente relevante.
+                        </p>
+
+                        <div class="card p-6 mb-8">
+                            <h3 class="text-xl font-bold mb-4 text-gray-800">Características principales de los LLM:</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3 mt-1">1</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Aprendizaje profundo</h4>
+                                        <p class="text-gray-600 text-sm">Utilizan arquitecturas de redes neuronales, como los transformadores, para aprender patrones complejos en el lenguaje.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3 mt-1">2</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Preentrenamiento</h4>
+                                        <p class="text-gray-600 text-sm">Son preentrenados con vastos corpus de texto de internet, libros y otras fuentes, lo que les permite adquirir un conocimiento general del mundo y del lenguaje.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3 mt-1">3</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Generación de texto</h4>
+                                        <p class="text-gray-600 text-sm">Pueden producir texto original, como artículos, resúmenes, correos electrónicos, e incluso código.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3 mt-1">4</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Comprensión del lenguaje</h4>
+                                        <p class="text-gray-600 text-sm">Son capaces de entender el significado y el contexto de las entradas de texto, lo que les permite responder preguntas, traducir idiomas y realizar análisis de sentimientos.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded mr-3 mt-1">5</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Adaptabilidad</h4>
+                                        <p class="text-gray-600 text-sm">Una vez preentrenados, pueden ser ajustados (fine-tuned) para tareas específicas con conjuntos de datos más pequeños, lo que los hace muy versátiles.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6 mb-8">
+                            <h3 class="text-xl font-bold mb-4 text-gray-800">Aplicaciones comunes de los LLM:</h3>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Asistentes virtuales y chatbots</h4>
+                                    <p class="text-gray-600 text-sm">Para interactuar con usuarios y proporcionar información o soporte.</p>
+                                </div>
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Generación de contenido</h4>
+                                    <p class="text-gray-600 text-sm">Creación automática de textos para blogs, marketing, noticias, etc.</p>
+                                </div>
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Traducción automática</h4>
+                                    <p class="text-gray-600 text-sm">Traducción de texto entre diferentes idiomas.</p>
+                                </div>
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Resumen de texto</h4>
+                                    <p class="text-gray-600 text-sm">Condensación de documentos largos en versiones más cortas y concisas.</p>
+                                </div>
+                                <div class="p-4 bg-gray-50 rounded-lg">
+                                    <h4 class="font-semibold text-gray-800 mb-2">Análisis de datos</h4>
+                                    <p class="text-gray-600 text-sm">Extracción de información clave y patrones de grandes volúmenes de texto.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visual-idea">
+                            <p class="text-sm">
+                                <strong>Idea visual:</strong> Una red neuronal interconectada con nodos que simulan neuronas y conexiones que fluyen, simbolizando el procesamiento de información y la complejidad de un LLM.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Fundamentals Section -->
+                    <div id="fundamentals" class="section-content p-8">
+                        <div class="flex items-center mb-6">
+                            <i class="fas fa-comments text-3xl mr-4 text-blue-600"></i>
+                            <h2 class="text-3xl font-bold text-gray-800">Fundamentos de Prompting</h2>
+                        </div>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            El <em>prompting</em> es el arte y la ciencia de diseñar las instrucciones o preguntas que se le dan a un modelo de lenguaje (LLM) para obtener la respuesta deseada. Un buen prompt es crucial para maximizar la utilidad de los LLM y asegurar que las salidas sean precisas, relevantes y coherentes.
+                        </p>
+
+                        <div class="card p-6 mb-8">
+                            <h3 class="text-xl font-bold mb-6 text-gray-800">Principios clave para un prompting efectivo:</h3>
+                            
+                            <div class="principle-card principle-1">
+                                <h4 class="font-semibold text-lg text-blue-700 mb-2">1. Claridad y Concisión</h4>
+                                <p class="text-gray-600 mb-3">El prompt debe ser claro, directo y sin ambigüedades. Evita la verbosidad y ve al grano. Cuanto más específico seas, mejor será la respuesta.</p>
+                                <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                                    <p class="text-sm"><strong>Ejemplo:</strong> En lugar de "Háblame de perros", usa "Describe las características principales de la raza de perro Golden Retriever y su temperamento."</p>
+                                </div>
+                            </div>
+
+                            <div class="principle-card principle-2">
+                                <h4 class="font-semibold text-lg text-green-700 mb-2">2. Especificidad</h4>
+                                <p class="text-gray-600 mb-3">Proporciona detalles suficientes para guiar al modelo. Define el formato de salida, el tono, la longitud y cualquier otra restricción relevante.</p>
+                                <div class="bg-green-50 p-3 rounded border border-green-200">
+                                    <p class="text-sm"><strong>Ejemplo:</strong> "Escribe un poema de cuatro estrofas sobre la primavera, con rima ABAB y un tono optimista." en lugar de "Escribe un poema sobre la primavera."</p>
+                                </div>
+                            </div>
+
+                            <div class="principle-card principle-3">
+                                <h4 class="font-semibold text-lg text-purple-700 mb-2">3. Contexto</h4>
+                                <p class="text-gray-600 mb-3">Ofrece al modelo la información de fondo necesaria para que entienda la situación o el tema. Esto es especialmente útil para tareas complejas o cuando el modelo necesita un conocimiento específico.</p>
+                                <div class="bg-purple-50 p-3 rounded border border-purple-200">
+                                    <p class="text-sm"><strong>Ejemplo:</strong> "Eres un experto en marketing digital. Redacta tres ideas de titulares para una campaña de email marketing sobre un nuevo software de gestión de proyectos dirigido a pequeñas empresas."</p>
+                                </div>
+                            </div>
+
+                            <div class="principle-card principle-4">
+                                <h4 class="font-semibold text-lg text-orange-700 mb-2">4. Rol</h4>
+                                <p class="text-gray-600 mb-3">Asigna un rol al modelo para que adapte su estilo y perspectiva. Esto puede mejorar significativamente la calidad y la relevancia de la respuesta.</p>
+                                <div class="bg-orange-50 p-3 rounded border border-orange-200">
+                                    <p class="text-sm"><strong>Ejemplo:</strong> "Actúa como un chef profesional. Dame una receta sencilla para hacer pasta carbonara auténtica."</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6 mb-8">
+                            <h3 class="text-xl font-bold mb-4 text-gray-800">Elementos comunes de un prompt:</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <span class="bg-gray-800 text-white text-xs font-medium px-2.5 py-0.5 rounded mr-3">Instrucción</span>
+                                    <span class="text-sm text-gray-600">La tarea principal que el modelo debe realizar.</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-800 text-white text-xs font-medium px-2.5 py-0.5 rounded mr-3">Contexto</span>
+                                    <span class="text-sm text-gray-600">Información de fondo o datos relevantes.</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-800 text-white text-xs font-medium px-2.5 py-0.5 rounded mr-3">Ejemplo</span>
+                                    <span class="text-sm text-gray-600">Si es necesario, proporciona ejemplos de entrada y salida para guiar al modelo.</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-800 text-white text-xs font-medium px-2.5 py-0.5 rounded mr-3">Formato</span>
+                                    <span class="text-sm text-gray-600">Cómo esperas que se presente la respuesta (lista, párrafo, JSON, etc.).</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-800 text-white text-xs font-medium px-2.5 py-0.5 rounded mr-3">Restricciones</span>
+                                    <span class="text-sm text-gray-600">Límites de longitud, palabras clave a incluir o excluir, tono, etc.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visual-idea">
+                            <p class="text-sm">
+                                <strong>Idea visual:</strong> Un proceso de comunicación claro y directo, con flechas que indican el flujo de información desde el usuario hacia el modelo de IA.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Techniques Section -->
+                    <div id="advanced" class="section-content p-8">
+                        <div class="flex items-center mb-6">
+                            <i class="fas fa-cogs text-3xl mr-4 text-blue-600"></i>
+                            <h2 class="text-3xl font-bold text-gray-800">Técnicas Avanzadas</h2>
+                        </div>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            Una vez dominados los fundamentos, las técnicas avanzadas de prompting permiten extraer el máximo potencial de los LLM, guiándolos para realizar tareas más complejas, razonar de manera más profunda y generar resultados de mayor calidad.
+                        </p>
+
+                        <div class="space-y-6">
+                            <div class="card p-6">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-blue-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">1</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Few-Shot Prompting</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Prompting con pocos ejemplos</p>
+                                <p class="text-gray-600 mb-4">Consiste en proporcionar al modelo algunos ejemplos de pares entrada-salida dentro del prompt. Esto ayuda al modelo a entender el patrón deseado y a generar respuestas coherentes con el estilo o formato de los ejemplos.</p>
+                                <div class="bg-gray-50 p-4 rounded border">
+                                    <p class="text-sm font-medium mb-2">Ejemplo:</p>
+                                    <div class="font-mono text-sm">
+                                        Traduce las siguientes palabras al español:<br>
+                                        Apple: Manzana<br>
+                                        House: Casa<br>
+                                        Cat: Gato<br>
+                                        Dog:
+                                    </div>
+                                </div>
+                                <span class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded mt-3">Ideal para tareas donde el formato de salida es crucial</span>
+                            </div>
+
+                            <div class="card p-6">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-green-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">2</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Chain-of-Thought (CoT)</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Cadena de Pensamiento</p>
+                                <p class="text-gray-600 mb-4">Esta técnica anima al modelo a mostrar su proceso de razonamiento paso a paso antes de dar la respuesta final. Al pedirle al modelo que "piense en voz alta", se mejora su capacidad para resolver problemas complejos.</p>
+                                <div class="bg-gray-50 p-4 rounded border">
+                                    <p class="text-sm font-medium mb-2">Ejemplo:</p>
+                                    <p class="text-sm">"El equipo A anotó 10 puntos. El equipo B anotó el doble de puntos que el equipo A. El equipo C anotó 5 puntos menos que el equipo B. ¿Cuántos puntos anotó el equipo C? Piensa paso a paso."</p>
+                                </div>
+                                <span class="inline-block bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded mt-3">Para problemas de razonamiento, matemáticas y lógica</span>
+                            </div>
+
+                            <div class="card p-6">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-purple-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">3</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Self-Consistency</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Auto-Consistencia</p>
+                                <p class="text-gray-600 mb-4">Una extensión de CoT, donde el modelo genera múltiples cadenas de pensamiento para la misma pregunta y luego selecciona la respuesta más consistente o frecuente entre ellas.</p>
+                                <span class="inline-block bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Para problemas críticos donde la precisión es primordial</span>
+                            </div>
+
+                            <div class="card p-6">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-orange-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">4</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Tree-of-Thought (ToT)</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Árbol de Pensamiento</p>
+                                <p class="text-gray-600 mb-4">Permite al modelo explorar múltiples caminos de razonamiento en paralelo, similar a un árbol de búsqueda. El modelo evalúa la viabilidad de cada rama y poda las que no son prometedoras.</p>
+                                <span class="inline-block bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded">Para problemas de planificación y toma de decisiones</span>
+                            </div>
+
+                            <div class="card p-6">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-red-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">5</span>
+                                    <h3 class="text-lg font-bold text-gray-800">RAG</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Generación Aumentada por Recuperación</p>
+                                <p class="text-gray-600 mb-4">Combina la capacidad de generación del LLM con la recuperación de información de una base de datos externa. Antes de generar una respuesta, el modelo busca información relevante en un corpus de documentos.</p>
+                                <span class="inline-block bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Para conocimientos específicos, actualizados o propietarios</span>
+                            </div>
+                        </div>
+
+                        <div class="visual-idea">
+                            <p class="text-sm">
+                                <strong>Idea visual:</strong> Un conjunto de herramientas o engranajes complejos y bien ajustados, simbolizando las técnicas avanzadas que permiten un control más preciso.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Limitations Section -->
+                    <div id="limitations" class="section-content p-8">
+                        <div class="flex items-center mb-6">
+                            <i class="fas fa-exclamation-triangle text-3xl mr-4 text-red-600"></i>
+                            <h2 class="text-3xl font-bold text-gray-800">Limitaciones de la IA</h2>
+                        </div>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            A pesar de los avances impresionantes y el potencial transformador de la Inteligencia Artificial, es crucial reconocer sus limitaciones inherentes. Comprender estas restricciones nos permite utilizar la IA de manera más efectiva y responsable.
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="limitation-card limitation-1">
+                                <h4 class="font-semibold text-lg text-red-700 mb-2">1. Falta de Sentido Común y Comprensión Profunda</h4>
+                                <p class="text-gray-600 text-sm">La IA, especialmente los LLM, procesa patrones y relaciones estadísticas en los datos, pero no posee una comprensión genuina del mundo, sentido común o la capacidad de razonar como los humanos. Esto puede llevar a respuestas lógicamente inconsistentes o a la "alucinación" de información.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-2">
+                                <h4 class="font-semibold text-lg text-orange-700 mb-2">2. Dependencia de los Datos de Entrenamiento</h4>
+                                <p class="text-gray-600 text-sm">La calidad, cantidad y diversidad de los datos con los que se entrena un modelo de IA determinan directamente su rendimiento. Si los datos son sesgados, incompletos o erróneos, el modelo replicará y amplificará esos defectos.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-3">
+                                <h4 class="font-semibold text-lg text-yellow-700 mb-2">3. Falta de Creatividad Genuina e Intuición</h4>
+                                <p class="text-gray-600 text-sm">Aunque la IA puede generar contenido novedoso (arte, música, texto), lo hace basándose en patrones aprendidos. Carece de la chispa de la creatividad humana, la intuición o la capacidad de innovar verdaderamente fuera de sus datos de entrenamiento.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-4">
+                                <h4 class="font-semibold text-lg text-purple-700 mb-2">4. Ausencia de Conciencia, Emoción y Empatía</h4>
+                                <p class="text-gray-600 text-sm">La IA no tiene conciencia, sentimientos, emociones o la capacidad de empatizar. Sus respuestas pueden simular empatía basándose en patrones lingüísticos, pero no hay una comprensión subyacente de la experiencia humana.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-5">
+                                <h4 class="font-semibold text-lg text-gray-700 mb-2">5. Problema de la "Caja Negra"</h4>
+                                <p class="text-gray-600 text-sm">Muchos modelos de IA avanzados, especialmente las redes neuronales profundas, son difíciles de interpretar. Es complicado entender cómo llegan a una decisión o respuesta específica, lo que plantea desafíos en términos de transparencia y confianza.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-6">
+                                <h4 class="font-semibold text-lg text-green-700 mb-2">6. Costos Computacionales y Energéticos</h4>
+                                <p class="text-gray-600 text-sm">Entrenar y ejecutar modelos de IA grandes requiere una cantidad significativa de recursos computacionales y energía, lo que tiene implicaciones económicas y ambientales.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-7">
+                                <h4 class="font-semibold text-lg text-blue-700 mb-2">7. Vulnerabilidad a Ataques Adversarios</h4>
+                                <p class="text-gray-600 text-sm">Los modelos de IA pueden ser susceptibles a ataques adversarios, donde pequeñas perturbaciones en los datos de entrada (imperceptibles para los humanos) pueden llevar a que el modelo cometa errores significativos.</p>
+                            </div>
+
+                            <div class="limitation-card limitation-8">
+                                <h4 class="font-semibold text-lg text-indigo-700 mb-2">8. Dificultad con la Novedad y lo Inesperado</h4>
+                                <p class="text-gray-600 text-sm">La IA sobresale en tareas para las que ha sido entrenada y en entornos predecibles. Sin embargo, puede tener dificultades para adaptarse a situaciones completamente nuevas o inesperadas que no se parecen a nada que haya visto en sus datos de entrenamiento.</p>
+                            </div>
+                        </div>
+
+                        <div class="visual-idea">
+                            <p class="text-sm">
+                                <strong>Idea visual:</strong> Barreras o límites, con un muro o señal de "stop" frente a un cerebro, simbolizando las restricciones de la IA.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Practice Section -->
+                    <div id="practice" class="section-content p-8">
+                        <div class="flex items-center mb-6">
+                            <i class="fas fa-target text-3xl mr-4 text-blue-600"></i>
+                            <h2 class="text-3xl font-bold text-gray-800">Práctica</h2>
+                        </div>
+                        
+                        <p class="text-lg text-gray-600 mb-8">
+                            Esta sección está dedicada a la aplicación práctica de las técnicas de prompting. Aquí encontrarás ejercicios interactivos y ejemplos para que puedas experimentar y mejorar tus habilidades en la formulación de prompts.
+                        </p>
+
+                        <div class="space-y-6">
+                            <div class="exercise-card exercise-1">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-blue-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">Ejercicio 1</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Prompting Básico</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Escribir prompts claros y concisos para obtener información específica</p>
+                                <div class="mb-4">
+                                    <p class="text-sm font-medium mb-2"><strong>Tarea:</strong> Formula un prompt para que un LLM te explique la fotosíntesis de manera sencilla, como si se lo explicara a un niño de 10 años.</p>
+                                </div>
+                                <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                                    <p class="text-sm font-medium">💡 Consejo: Recuerda ser específico sobre la audiencia y el nivel de complejidad deseado.</p>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card exercise-2">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-green-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">Ejercicio 2</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Prompting con Contexto y Rol</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Utilizar el contexto y asignar un rol para guiar la respuesta del LLM</p>
+                                <div class="mb-4">
+                                    <p class="text-sm font-medium mb-2"><strong>Tarea:</strong> Actúa como un historiador experto en la Revolución Francesa. Redacta un prompt para que un LLM te describa los principales eventos que llevaron a la toma de la Bastilla, incluyendo el contexto social y político de la época.</p>
+                                </div>
+                                <div class="bg-green-50 p-3 rounded border border-green-200">
+                                    <p class="text-sm font-medium">💡 Consejo: Define claramente el rol y proporciona contexto específico sobre lo que necesitas.</p>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card exercise-3">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-purple-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">Ejercicio 3</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Few-Shot Prompting</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Guiar al LLM con ejemplos para obtener un formato de salida específico</p>
+                                <div class="mb-4">
+                                    <p class="text-sm font-medium mb-2"><strong>Tarea:</strong> Utiliza few-shot prompting para que un LLM clasifique las siguientes frutas en cítricas o no cítricas:</p>
+                                    <div class="bg-gray-50 p-3 rounded font-mono text-sm mt-2">
+                                        Manzana: No cítrica<br>
+                                        Naranja: Cítrica<br>
+                                        Plátano: No cítrica<br>
+                                        Limón:<br>
+                                        Uva:
+                                    </div>
+                                </div>
+                                <div class="bg-purple-50 p-3 rounded border border-purple-200">
+                                    <p class="text-sm font-medium">💡 Consejo: Proporciona suficientes ejemplos para que el modelo entienda el patrón.</p>
+                                </div>
+                            </div>
+
+                            <div class="exercise-card exercise-4">
+                                <div class="flex items-center mb-4">
+                                    <span class="bg-orange-500 text-white text-sm font-medium px-3 py-1 rounded mr-3">Ejercicio 4</span>
+                                    <h3 class="text-lg font-bold text-gray-800">Chain-of-Thought Prompting</h3>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-3">Pedir al LLM que muestre su razonamiento paso a paso</p>
+                                <div class="mb-4">
+                                    <p class="text-sm font-medium mb-2"><strong>Tarea:</strong> Formula un prompt para que un LLM resuelva el siguiente problema matemático, mostrando cada paso del razonamiento:</p>
+                                    <div class="bg-gray-50 p-3 rounded text-sm mt-2">
+                                        "Si Juan tiene 5 manzanas y le da 2 a María, y luego compra 3 manzanas más, ¿cuántas manzanas tiene Juan en total?"
+                                    </div>
+                                </div>
+                                <div class="bg-orange-50 p-3 rounded border border-orange-200">
+                                    <p class="text-sm font-medium">💡 Consejo: Pide explícitamente que muestre el proceso de razonamiento paso a paso.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card p-6 mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200">
+                            <h3 class="text-lg font-bold mb-4 text-gray-800">Consejos para la práctica:</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-start">
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded mr-3 mt-1">🧪</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Experimenta</h4>
+                                        <p class="text-gray-600 text-sm">No tengas miedo de probar diferentes enfoques y ver cómo el LLM responde.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded mr-3 mt-1">🔍</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Analiza las respuestas</h4>
+                                        <p class="text-gray-600 text-sm">Si la respuesta no es la esperada, revisa tu prompt. ¿Fue lo suficientemente claro? ¿Le faltó contexto?</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded mr-3 mt-1">🔄</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Itera</h4>
+                                        <p class="text-gray-600 text-sm">Mejora tus prompts basándote en los resultados obtenidos.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded mr-3 mt-1">🎨</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">Sé creativo</h4>
+                                        <p class="text-gray-600 text-sm">Piensa en problemas o tareas que te interesen y trata de resolverlos usando prompting.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visual-idea">
+                            <p class="text-sm">
+                                <strong>Idea visual:</strong> Un entorno de aprendizaje interactivo con una persona experimentando y elementos visuales que sugieren mejora continua.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="text-center">
+                <p>© 2025 Taller de Técnicas de Prompting. Diseñado para el aprendizaje interactivo.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav buttons
+            const navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked nav button
+            event.target.closest('.nav-button').classList.add('active');
+        }
+    </script>
+</body>
+</html>
